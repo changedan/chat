@@ -10,17 +10,18 @@ export interface IJoinForm {
 }
 
 const JoinForm = () => {
-  const [formField, setFormFiled] = useState<IJoinForm>({
+  const [joinField, setJoinFiled] = useState<IJoinForm>({
     email: "",
     nickname: "",
     password: "",
     confirmPassword: "",
   });
-  const { email, nickname, password, confirmPassword } = formField;
+  const { email, nickname, password, confirmPassword } = joinField;
+  const [errorMsg, setErrorMsg] = useState<string>("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setFormFiled({ ...formField, [name]: value });
+    setJoinFiled({ ...joinField, [name]: value });
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -32,7 +33,18 @@ const JoinForm = () => {
 
     try {
       await createAuthUserWithEmailAndPassword(email, password);
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+      if (error.code === "auth/weak-password") {
+        setErrorMsg("비밀번호 6자리 이상 입력해주세요.");
+      }
+      if (error.code === "auth/invalid-email") {
+        setErrorMsg("잘못된 이메일 주소입니다.");
+      }
+      if (error.code === "auth/email-already-in-use") {
+        setErrorMsg("이미 가입되어 있는 계정입니다");
+      }
+    }
   };
 
   return (
@@ -41,7 +53,7 @@ const JoinForm = () => {
         <S.Label>이메일</S.Label>
         <S.Input
           type="text"
-          name="email"
+          name={"email"}
           value={email}
           onChange={handleChange}
           placeholder="id@email.com"
@@ -50,7 +62,7 @@ const JoinForm = () => {
         <S.Label>닉네임</S.Label>
         <S.Input
           type="text"
-          name="nickname"
+          name={"nickname"}
           value={nickname}
           onChange={handleChange}
         />
@@ -58,7 +70,7 @@ const JoinForm = () => {
         <S.Label>비밀번호</S.Label>
         <S.Input
           type="password"
-          name="password"
+          name={"password"}
           value={password}
           onChange={handleChange}
         />
@@ -66,7 +78,7 @@ const JoinForm = () => {
         <S.Label>비밀번호 확인</S.Label>
         <S.Input
           type="password"
-          name="confirmPassword"
+          name={"confirmPassword"}
           value={confirmPassword}
           onChange={handleChange}
         />
