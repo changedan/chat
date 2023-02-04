@@ -1,6 +1,5 @@
 import * as S from "styles/JoinForm.modules";
 import React, { useState } from "react";
-import { useRouter } from "next/router";
 import { createAuthUserWithEmailAndPassword } from "../utils/firebase/firebase.utils";
 
 export interface IJoinForm {
@@ -36,40 +35,43 @@ const JoinForm = () => {
     } catch (error) {}
   };
 
-  const router = useRouter();
-
   return (
     <>
       <S.JoinForm onSubmit={handleSubmit}>
-        <label>아이디</label>
-        <input type="text" name="email" value={email} onChange={handleChange} />
+        <S.Label>이메일</S.Label>
+        <S.Input
+          type="text"
+          name="email"
+          value={email}
+          onChange={handleChange}
+          placeholder="id@email.com"
+        />
 
-        <label>닉네임</label>
-        <input
+        <S.Label>닉네임</S.Label>
+        <S.Input
           type="text"
           name="nickname"
           value={nickname}
           onChange={handleChange}
         />
 
-        <label>비밀번호</label>
-        <input
+        <S.Label>비밀번호</S.Label>
+        <S.Input
           type="password"
           name="password"
           value={password}
           onChange={handleChange}
         />
 
-        <label>비밀번호 확인</label>
-        <input
+        <S.Label>비밀번호 확인</S.Label>
+        <S.Input
           type="password"
           name="confirmPassword"
           value={confirmPassword}
           onChange={handleChange}
         />
-        <button type="submit">회원가입</button>
+        <S.Button type="submit">가입하기</S.Button>
       </S.JoinForm>
-      <button onClick={() => router.push("/")}>홈으로</button>
     </>
   );
 };
