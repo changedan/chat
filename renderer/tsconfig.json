@@ -6,6 +6,9 @@
     "target": "es5",
     "allowJs": true,
     "types": ["@emotion/react/types/css-prop"],
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "types/*": ["./@types/*"]
+    }
   }
 }
