@@ -1,7 +1,11 @@
 import * as S from "styles/JoinForm.modules";
 import React, { useState } from "react";
-import { createAuthUserWithEmailAndPassword } from "../utils/firebase/firebase.utils";
+import {
+  createAuthUserWithEmailAndPassword,
+  createUserDocumentFromAuth,
+} from "../utils/firebase/firebase.utils";
 import Button from "./common/Button";
+import { useRouter } from "next/router";
 
 export interface IJoinForm {
   email: string;
@@ -11,6 +15,7 @@ export interface IJoinForm {
 }
 
 const JoinForm = function () {
+  const router = useRouter();
   const [joinField, setJoinFiled] = useState<IJoinForm>({
     email: "",
     nickname: "",
@@ -33,7 +38,13 @@ const JoinForm = function () {
     }
 
     try {
-      await createAuthUserWithEmailAndPassword(email, password);
+      const { user } = await createAuthUserWithEmailAndPassword(
+        email,
+        password
+      );
+      setJoinFiled(joinField);
+      await createUserDocumentFromAuth(user, { displayName: nickname });
+      router.push("/");
     } catch (error) {
       console.error(error);
       if (error.code === "auth/weak-password") {
@@ -83,6 +94,7 @@ const JoinForm = function () {
           value={confirmPassword}
           onChange={handleChange}
         />
+        {errorMsg}
         <Button type="submit" title="가입하기" />
       </S.JoinForm>
     </>
