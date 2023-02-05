@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Home = styled.body`
+export const Home = styled.main`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -16,8 +16,8 @@ export const Header = styled.header`
 `;
 
 export const Button = styled.button`
-  border: none;
-  background: none;
+  border: 1px solid #000;
+  /* background: none; */
   cursor: pointer;
   color: #888888;
 `;

@@ -1,7 +1,9 @@
 @import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css");
 
 html,
-body {
+body,
+input::placeholder,
+button {
   padding: 0;
   margin: 0;
   font-family: Pretendard, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,

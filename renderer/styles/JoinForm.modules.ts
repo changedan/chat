@@ -20,12 +20,12 @@ export const Input = styled.input`
   margin-bottom: 20px;
 `;
 
-export const Button = styled.button`
-  color: #fff;
-  border: solid 1px #585858;
-  background-color: #585858;
-  padding: 15px 0 15px;
-  font-size: 18px;
-  margin: 30px 0 9px;
-  cursor: pointer;
-`;
+// export const Button = styled.button`
+//   color: #fff;
+//   border: solid 1px #585858;
+//   background-color: #585858;
+//   padding: 15px 0 15px;
+//   font-size: 18px;
+//   margin: 30px 0 9px;
+//   cursor: pointer;
+// `;
