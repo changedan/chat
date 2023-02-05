@@ -13,20 +13,20 @@ interface ButtonTypes {
 
 const Button = ({ type, title, color, buttonColor, onClick }: ButtonTypes) => {
   return (
-    <ButtonWrapper
+    <StyledButton
       type={type}
       color={color}
       buttonColor={buttonColor}
       onClick={onClick}
     >
       {title}
-    </ButtonWrapper>
+    </StyledButton>
   );
 };
 
 export default Button;
 
-const ButtonWrapper = styled.button<Pick<ButtonTypes, "buttonColor">>`
+const StyledButton = styled.button<Pick<ButtonTypes, "buttonColor">>`
   border: 1px solid ${({ buttonColor }) => buttonColor?.border};
   background-color: ${({ buttonColor }) => buttonColor?.background};
   color: ${({ color }) => color};

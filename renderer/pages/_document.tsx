@@ -7,7 +7,7 @@ class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <title>Chatting</title>
+          <title>CHAT</title>
         </Head>
         <body>
           <Main />

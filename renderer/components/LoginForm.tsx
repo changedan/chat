@@ -2,6 +2,8 @@ import * as S from "styles/LoginForm.modules";
 import React, { useState } from "react";
 import { signInAuthUserWithEmailAndPassword } from "../utils/firebase/firebase.utils";
 import Button from "./common/Button";
+import { useRouter } from "next/router";
+
 export interface ILoginForm {
   email: string;
   password: string;
@@ -14,6 +16,8 @@ const LoginForm = () => {
   });
   const { email, password } = loginField;
   const [errorMsg, setErrorMsg] = useState<string>("");
+
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -29,6 +33,7 @@ const LoginForm = () => {
 
     try {
       await signInAuthUserWithEmailAndPassword(email, password);
+      router.push("/userList");
     } catch (error) {
       console.error(error);
       if (error.code === "auth/user-not-found" || "user-not-found") {

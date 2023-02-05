@@ -10,16 +10,15 @@ const HomePage: NextPage = function () {
   return (
     <S.Home>
       <S.Header>
-        <h1>Chatting</h1>
+        <h1>CHAT</h1>
       </S.Header>
       <Login />
-      {/* <S.Button onClick={() => router.push("/join")}>회원가입</S.Button> */}
       <Button
         type="button"
         title="회원가입"
         color="#585858"
         buttonColor={{ background: "#fff" }}
-        onClick={() => router.push("/join")}
+        onClick={() => router.replace("/join")}
       />
     </S.Home>
   );

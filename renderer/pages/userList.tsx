@@ -1,7 +1,12 @@
+import * as S from "styles/UserList.modules";
 import { NextPage } from "next";
-import { useRouter } from "next/router";
+import Navbar from "components/common/Navbar";
 
 const IndexPage: NextPage = function () {
-  return <></>;
+  return (
+    <S.UserList>
+      <Navbar />
+    </S.UserList>
+  );
 };
 export default IndexPage;

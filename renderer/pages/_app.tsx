@@ -6,8 +6,7 @@ const MyApp = function ({ Component, pageProps }: AppProps) {
   return (
     <>
       <Head>
-        <meta charSet="utf-8" />
-        <title>Chatting</title>
+        <title>CHAT</title>
       </Head>
       <Component {...pageProps} />
     </>
