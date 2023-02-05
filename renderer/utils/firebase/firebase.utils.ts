@@ -10,7 +10,6 @@ import {
   doc,
   getDoc,
   setDoc,
-  query,
   collection,
   getDocs,
 } from "firebase/firestore";
@@ -74,12 +73,8 @@ export const singOutAuth = () => {
 
 export const getUserList = async () => {
   try {
-    const querySnapshot = await getDocs(query(collection(db, "user")));
-    const userList = [];
-    querySnapshot.forEach((doc) => {
-      userList.push(doc.data());
-    });
-    return userList;
+    const querySnapshot = await getDocs(collection(db, "user"));
+    return querySnapshot.docs.map((doc) => doc.data());
   } catch (error) {
     console.error("getUserList", error);
   }
