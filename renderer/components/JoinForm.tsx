@@ -1,6 +1,7 @@
 import * as S from "styles/JoinForm.modules";
 import React, { useState } from "react";
 import { createAuthUserWithEmailAndPassword } from "../utils/firebase/firebase.utils";
+import Button from "./common/Button";
 
 export interface IJoinForm {
   email: string;
@@ -9,7 +10,7 @@ export interface IJoinForm {
   confirmPassword: string;
 }
 
-const JoinForm = () => {
+const JoinForm = function () {
   const [joinField, setJoinFiled] = useState<IJoinForm>({
     email: "",
     nickname: "",
@@ -82,7 +83,7 @@ const JoinForm = () => {
           value={confirmPassword}
           onChange={handleChange}
         />
-        <S.Button type="submit">가입하기</S.Button>
+        <Button type="submit" title="가입하기" />
       </S.JoinForm>
     </>
   );

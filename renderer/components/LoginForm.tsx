@@ -1,6 +1,7 @@
 import * as S from "styles/LoginForm.modules";
 import React, { useState } from "react";
 import { signInAuthUserWithEmailAndPassword } from "../utils/firebase/firebase.utils";
+import Button from "./common/Button";
 export interface ILoginForm {
   email: string;
   password: string;
@@ -56,7 +57,7 @@ const LoginForm = () => {
           onChange={handleChange}
           placeholder={"비밀번호"}
         />
-        <S.Button type="submit">로그인</S.Button>
+        <Button type="submit" title="로그인" />
       </S.LoginForm>
     </>
   );

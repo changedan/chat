@@ -1,6 +1,6 @@
 import styled from "@emotion/styled";
 
-export const Join = styled.body`
+export const Join = styled.main`
   display: flex;
   flex-flow: column nowrap;
   align-items: center;
@@ -11,9 +11,9 @@ export const Join = styled.body`
   padding: 0 2rem;
 `;
 
-export const Button = styled.button`
-  border: none;
-  background: none;
-  cursor: pointer;
-  color: #888888;
-`;
+// export const Button = styled.button`
+//   border: none;
+//   background: none;
+//   cursor: pointer;
+//   color: #888888;
+// `;
