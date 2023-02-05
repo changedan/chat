@@ -6,7 +6,7 @@
   "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
   "main": "app/background.js",
   "scripts": {
-    "dev": "nextron",
+    "start": "nextron",
     "build": "nextron build",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -22,6 +22,7 @@
     "@types/react": "^18.0.26",
     "electron": "^21.3.3",
     "electron-builder": "^23.6.0",
+    "firebase": "^9.17.0",
     "next": "^12.3.4",
     "nextron": "^8.5.0",
     "react": "^18.2.0",
