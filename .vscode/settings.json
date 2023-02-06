@@ -1,3 +1,4 @@
 {
-  "cSpell.ignorePaths": ["utils", "styles", "package.json"]
+  "cSpell.ignorePaths": ["utils", "styles", "package.json"],
+  "cSpell.words": ["firestore"]
 }

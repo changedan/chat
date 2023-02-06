@@ -32,7 +32,7 @@ const StyledButton = styled.button<Pick<ButtonTypes, "buttonColor">>`
   color: ${({ color }) => color};
   padding: 15px 0 15px;
   margin: 10px 0 9px;
-  width: 460px;
+  width: 430px;
   cursor: pointer;
 `;
 

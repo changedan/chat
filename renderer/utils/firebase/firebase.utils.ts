@@ -1,18 +1,6 @@
 import { initializeApp } from "firebase/app";
-import {
-  getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
-} from "firebase/auth";
-import {
-  getFirestore,
-  doc,
-  getDoc,
-  setDoc,
-  collection,
-  getDocs,
-} from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 
 const firebaseConfig = {
@@ -23,59 +11,67 @@ const firebaseConfig = {
   messagingSenderId: "1048229352306",
   appId: "1:1048229352306:web:52d6ea24420c2867ec43eb",
 };
-
 export const firebaseApp = initializeApp(firebaseConfig);
 export const auth = getAuth();
 export const db = getFirestore();
 export const storage = getStorage();
 
-export const createAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
+// export const createUserDocumentFromAuth = async (userAuth, addUser = {}) => {
+//   if (!userAuth) return;
 
-  return await createUserWithEmailAndPassword(auth, email, password);
-};
+//   const userDoc = doc(db, "user", userAuth.uid);
 
-export const createUserDocumentFromAuth = async (userAuth, addUser = {}) => {
-  if (!userAuth) return;
+//   const userInfo = await getDoc(userDoc);
 
-  const userDoc = doc(db, "user", userAuth.uid);
+//   if (!userInfo.exists()) {
+//     const { displayName, email } = userAuth;
+//     const createdAt = serverTimestamp();
 
-  const userInfo = await getDoc(userDoc);
+//     try {
+//       await setDoc(userDoc, {
+//         displayName,
+//         email,
+//         createdAt,
+//         uid: auth.currentUser.uid,
+//         ...addUser,
+//       });
+//     } catch (error) {
+//       return error;
+//     }
+//   }
+//   return userDoc;
+// };
 
-  if (!userInfo.exists()) {
-    const { displayName, email } = userAuth;
-    const createdAt = new Date();
+// export const getMessageData = async () => {
+//   try {
+//     const queryMessage = await getDocs(collection(db, "messages"));
+//     return queryMessage.docs.map((doc) => doc.data());
+//   } catch (error) {
+//     console.error("getMessageData", error);
+//   }
+// };
 
-    try {
-      await setDoc(userDoc, {
-        displayName,
-        email,
-        createdAt,
-        ...addUser,
-      });
-    } catch (error) {
-      console.error("createUserDocumetFromAuth ::", error);
-    }
-  }
+// export const sendMessageData = async ({ text }) => {
+//   if (!auth.currentUser) {
+//     console.error("no auth");
+//     return;
+//   }
 
-  return userDoc;
-};
+//   try {
+//     const { uid, displayName } = auth.currentUser;
+//     const querySendMsg = await query(
+//       collection(db, "messages"),
+//       orderBy("timestamp")
+//     );
+//     const unsubscribe = onSnapshot(querySendMsg, (querySnapshot) => {
+//       let messages = [];
+//       return querySnapshot.forEach((doc) => {
+//         return messages.push({ ...doc.data(), id: doc.id });
+//       });
+//     });
 
-export const signInAuthUserWithEmailAndPassword = async (email, password) => {
-  if (!email || !password) return;
-
-  return await signInWithEmailAndPassword(auth, email, password);
-};
-
-export const singOutAuth = () => {
-  signOut(auth);
-};
-
-export const getUserList = async () => {
-  try {
-    const querySnapshot = await getDocs(collection(db, "user"));
-    return querySnapshot.docs.map((doc) => doc.data());
-  } catch (error) {
-    console.error("getUserList", error);
-  }
-};
+//     console.log("send");
+//   } catch (error) {
+//     console.log("sendMessageData", error);
+//   }
+// };
