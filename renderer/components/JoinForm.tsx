@@ -8,7 +8,7 @@ import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
 interface IJoinForm {
   email: string;
-  nickname: string;
+  displayName: string;
   password: string;
   confirmPassword: string;
 }
@@ -16,23 +16,23 @@ interface IJoinForm {
 const JoinForm = () => {
   const [joinField, setJoinFiled] = useState<IJoinForm>({
     email: "",
-    nickname: "",
+    displayName: "",
     password: "",
     confirmPassword: "",
   });
-  const uid = auth.currentUser.uid;
-  const { email, nickname, password, confirmPassword } = joinField;
+
+  const { email, displayName, password, confirmPassword } = joinField;
   const [errorMsg, setErrorMsg] = useState<string>("");
   const router = useRouter();
 
   const createUser = async (email, password) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      setDoc(doc(db, "user", uid), {
+      setDoc(doc(db, "user", auth.currentUser.uid), {
         createdAt: serverTimestamp(),
-        displayName: joinField.nickname,
+        displayName: joinField.displayName,
         email: joinField.email,
-        uid: uid,
+        uid: auth.currentUser.uid,
       });
       router.push("/");
     } catch (error) {
@@ -80,8 +80,8 @@ const JoinForm = () => {
       <StyledLabel>닉네임</StyledLabel>
       <StyledInput
         type="text"
-        name="nickname"
-        value={nickname}
+        name="displayName"
+        value={displayName}
         onChange={handleChange}
       />
 

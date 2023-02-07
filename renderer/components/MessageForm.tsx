@@ -1,9 +1,16 @@
 import styled from "@emotion/styled";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  query,
+  onSnapshot,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import React, { useState } from "react";
-import { useRecoilValue } from "recoil";
-import { db } from "utils/firebase/firebase.utils";
-
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { auth, db } from "utils/firebase/firebase.utils";
 import Button from "./common/Button";
 import { authState } from "./recoil/atoms";
 
@@ -15,13 +22,33 @@ const MessageForm = () => {
   const [message, setMessage] = useState<IMessageForm>({
     text: "",
   });
-  const authStateValue = useRecoilValue(authState);
-  const { user } = authStateValue;
+  const { email, uid, displayName } = useRecoilValue(authState);
+  const setAuthState = useSetRecoilState(authState);
+
+  const getUserInfo = async () => {
+    const queryDisplayName = query(
+      collection(db, "user"),
+      where("uid", "==", `"${auth.currentUser.uid}"`)
+    );
+    const querySnapshot = await getDocs(queryDisplayName);
+    const getDisplayName = new Array();
+    getDisplayName.push(
+      querySnapshot.forEach((data) => ({
+        displayName: data.data().display,
+      }))
+    );
+    setAuthState((prevent) => ({
+      ...prevent,
+      displayName: getDisplayName[0].displayName,
+    }));
+  };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setMessage({ ...message, [name]: value });
   };
+
+  console.log(auth.currentUser);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -30,11 +57,14 @@ const MessageForm = () => {
       return;
     }
 
+    getUserInfo();
+
     await addDoc(collection(db, "messages"), {
       text: message.text,
       createdAt: serverTimestamp(),
-      displayName: user.displayName,
-      uid: user.uid,
+      displayName: displayName,
+      uid: uid,
+      email: email,
     });
     setMessage({ text: "" });
   };

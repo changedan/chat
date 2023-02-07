@@ -4,7 +4,6 @@ import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "utils/firebase/firebase.utils";
-
 interface ILoginForm {
   email: string;
   password: string;
@@ -17,12 +16,13 @@ const LoginForm = () => {
   });
   const { email, password } = loginField;
   const [errorMsg, setErrorMsg] = useState<string>("");
+
   const router = useRouter();
 
   const signIn = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push("/userList");
+      router.replace("/userList");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
         setErrorMsg("메일 주소를 다시 확인해주세요.");

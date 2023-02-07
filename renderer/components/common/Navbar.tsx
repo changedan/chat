@@ -1,24 +1,35 @@
 import styled from "@emotion/styled";
 import { signOut } from "firebase/auth";
 import { useRouter } from "next/router";
+import { useEffect } from "react";
 import { HiUser, HiChatAlt, HiChatAlt2 } from "react-icons/hi";
 import { IoLogOut } from "react-icons/io5";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { auth } from "utils/firebase/firebase.utils";
+// import { auth } from "utils/firebase/firebase.utils";
 import { authState } from "../recoil/atoms";
 
 const Navbar = () => {
-  const [userState, setUserState] = useRecoilState(authState);
+  const setAuthSate = useSetRecoilState(authState);
+  const user = auth.currentUser;
   const router = useRouter();
+
+  // const updateAuthState = () => {
+  //   setAuthSate({
+  //     isLoading: true,
+  //     displayName: user.displayName,
+  //     email: user.email,
+  //     uid: user.uid,
+  //   });
+  // };
 
   const handleLogOut = () => {
     signOut(auth);
-    setUserState((prevState) => ({
+    setAuthSate((prevState) => ({
       ...prevState,
-      isLoading: true,
+      isLoading: false,
     }));
     console.log("로그아웃 성공");
-    console.log(userState);
     router.replace("/");
   };
 
@@ -33,7 +44,6 @@ const Navbar = () => {
   return (
     <StyledNavbar>
       <HiUser onClick={handleUserList} />
-      <HiChatAlt />
       <HiChatAlt2 />
       <IoLogOut onClick={handleLogOut} />
     </StyledNavbar>

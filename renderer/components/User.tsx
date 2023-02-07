@@ -3,11 +3,13 @@ import { HiUserCircle } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { collection, getDocs } from "firebase/firestore";
-import { db } from "utils/firebase/firebase.utils";
+import { auth, db } from "utils/firebase/firebase.utils";
+import { useSetRecoilState } from "recoil";
+import { authState } from "./recoil/atoms";
 
 interface IUser {
   email: string;
-  displayName: string;
+  uid: string;
 }
 
 const User = () => {
@@ -22,7 +24,8 @@ const User = () => {
     const user = await getDocs(collection(db, "user"));
     const userList = user.docs.map((user) => ({
       email: user.data().email,
-      displayName: user.data().displayName,
+      // displayName: user.data().displayName,
+      uid: user.data().uid,
     }));
     setUser(userList);
   };
@@ -35,12 +38,12 @@ const User = () => {
     <>
       {user.map((user) => (
         <StyledUser
-          key={user.email}
+          key={user.uid}
           style={{ color: "#000" }}
           onClick={handleChatroom}
         >
           <HiUserCircle />
-          {user.displayName}
+          {user.email}
         </StyledUser>
       ))}
     </>
