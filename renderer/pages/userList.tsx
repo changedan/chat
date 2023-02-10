@@ -2,12 +2,27 @@ import { NextPage } from "next";
 import Navbar from "components/common/Navbar";
 import User from "components/User";
 import styled from "@emotion/styled";
+import { useEffect, useState } from "react";
 
 const IndexPage: NextPage = function () {
+  const [addChat, setAddChat] = useState(false);
+
+  const handleAddChat = async () => {
+    await setAddChat(true);
+  };
+
+  useEffect(() => {
+    handleAddChat();
+  }, [addChat]);
+
   return (
     <StyledUserList>
-      <StyledUser>
-        <User />
+      <StyledUser
+        onClick={() => {
+          handleAddChat();
+        }}
+      >
+        <User addChat={addChat} />
       </StyledUser>
       <Navbar />
     </StyledUserList>
@@ -26,4 +41,4 @@ const StyledUserList = styled.main`
   padding: 0 2rem;
 `;
 
-const StyledUser = styled.section``;
+const StyledUser = styled.ul``;

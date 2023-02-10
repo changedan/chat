@@ -1,19 +1,11 @@
 import styled from "@emotion/styled";
-import {
-  collection,
-  addDoc,
-  serverTimestamp,
-  query,
-  onSnapshot,
-  where,
-  getDocs,
-} from "firebase/firestore";
+import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { auth, db } from "utils/firebase/firebase.utils";
+import { useRecoilValue } from "recoil";
+import { db } from "utils/firebase/firebase.utils";
 import Button from "./common/Button";
-import { authState } from "./recoil/atoms";
-
+import { authState, directState, roomState } from "./recoil/atoms";
+import { RiSendPlane2Fill } from "react-icons/ri";
 interface IMessageForm {
   text: string;
 }
@@ -22,50 +14,40 @@ const MessageForm = () => {
   const [message, setMessage] = useState<IMessageForm>({
     text: "",
   });
-  const { email, uid, displayName } = useRecoilValue(authState);
-  const setAuthState = useSetRecoilState(authState);
-
-  const getUserInfo = async () => {
-    const queryDisplayName = query(
-      collection(db, "user"),
-      where("uid", "==", `"${auth.currentUser.uid}"`)
-    );
-    const querySnapshot = await getDocs(queryDisplayName);
-    const getDisplayName = new Array();
-    getDisplayName.push(
-      querySnapshot.forEach((data) => ({
-        displayName: data.data().display,
-      }))
-    );
-    setAuthState((prevent) => ({
-      ...prevent,
-      displayName: getDisplayName[0].displayName,
-    }));
-  };
+  const { uid, displayName } = useRecoilValue(authState);
+  const { roomType } = useRecoilValue(roomState);
+  const { toId } = useRecoilValue(directState);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setMessage({ ...message, [name]: value });
   };
 
-  console.log(auth.currentUser);
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     if (message.text === "") {
       return;
     }
 
-    getUserInfo();
+    if (roomType === "direct") {
+      addDoc(collection(db, "direct"), {
+        createdAt: new Date(),
+        displayName: displayName,
+        message: message.text,
+        roomUid: uid + toId,
+        uid: uid,
+      });
+    }
 
-    await addDoc(collection(db, "messages"), {
-      text: message.text,
-      createdAt: serverTimestamp(),
-      displayName: displayName,
-      uid: uid,
-      email: email,
-    });
+    if (roomType === "group") {
+      addDoc(collection(db, "group"), {
+        createdAt: new Date(),
+        fromId: uid,
+        fromName: displayName,
+        message: message.text,
+      });
+    }
     setMessage({ text: "" });
   };
 
@@ -77,7 +59,9 @@ const MessageForm = () => {
         value={message.text}
         onChange={handleChange}
       />
-      <Button type="submit" title="보내기" />
+      <StyledBtn type="submit" title="보내기">
+        <RiSendPlane2Fill />
+      </StyledBtn>
     </StyledMsgForm>
   );
 };
@@ -86,8 +70,8 @@ export default MessageForm;
 
 const StyledMsgForm = styled.form`
   display: flex;
-  flex-flow: column;
-  width: 430px;
+  flex-flow: row;
+  width: 100%;
 `;
 
 const StyledInput = styled.input`
@@ -96,5 +80,17 @@ const StyledInput = styled.input`
   outline: 0;
   padding: 10px 110px 10px 14px;
   font-size: 15px;
-  margin-bottom: 20px;
+`;
+
+const StyledBtn = styled.button`
+  border: solid 1px #dadada;
+  background-color: #dadada;
+  width: 60px;
+  padding: 10px;
+
+  svg {
+    cursor: pointer;
+    color: #585858;
+    font-size: 22px;
+  }
 `;

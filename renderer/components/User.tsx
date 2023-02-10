@@ -2,29 +2,60 @@ import styled from "@emotion/styled";
 import { HiUserCircle } from "react-icons/hi";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { collection, getDocs } from "firebase/firestore";
-import { auth, db } from "utils/firebase/firebase.utils";
-import { useSetRecoilState } from "recoil";
-import { authState } from "./recoil/atoms";
+import {
+  collection,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from "firebase/firestore";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authState, directState, roomState } from "./recoil/atoms";
+import { db } from "utils/firebase/firebase.utils";
 
 interface IUser {
   email: string;
   uid: string;
+  displayName: string;
 }
 
-const User = () => {
-  const router = useRouter();
+const User = ({ addChat }) => {
   const [user, setUser] = useState<Array<IUser>>([]);
+  const { uid, displayName } = useRecoilValue(authState);
+  const setRoomSate = useSetRecoilState(roomState);
+  const setDirectState = useSetRecoilState(directState);
+  const router = useRouter();
 
-  const handleChatroom = () => {
-    router.push("/chatroom");
+  const handleChatroom = async (targetUid) => {
+    if (addChat === false) return;
+
+    const roomUid = targetUid + uid;
+
+    await setDoc(doc(collection(db, "direct"), "roomUid"), {
+      roomUid: roomUid,
+    });
+    setRoomSate({ roomType: "direct" });
+    setDirectState({ fromId: uid, toId: targetUid });
+    handleRouter();
+  };
+
+  const handleRouter = () => {
+    router.replace("/chatroom");
   };
 
   const getUserList = async () => {
-    const user = await getDocs(collection(db, "user"));
-    const userList = user.docs.map((user) => ({
+    const queryUser = await query(
+      collection(db, "user"),
+      where("displayName", "!=", displayName),
+      orderBy("displayName", "asc")
+    );
+    const userData = await getDocs(queryUser);
+    const userList = userData.docs.map((user) => ({
       email: user.data().email,
-      // displayName: user.data().displayName,
+      displayName: user.data().displayName,
       uid: user.data().uid,
     }));
     setUser(userList);
@@ -40,10 +71,15 @@ const User = () => {
         <StyledUser
           key={user.uid}
           style={{ color: "#000" }}
-          onClick={handleChatroom}
+          onClick={() => handleChatroom(user.uid)}
         >
           <HiUserCircle />
-          {user.email}
+          <StyledUserName>
+            <StyledEmail>{user.email}</StyledEmail>
+            <StyledDisplayName>
+              {user.displayName && "@" + `${user.displayName}`}
+            </StyledDisplayName>
+          </StyledUserName>
         </StyledUser>
       ))}
     </>
@@ -52,7 +88,7 @@ const User = () => {
 
 export default User;
 
-const StyledUser = styled.div`
+const StyledUser = styled.li`
   display: flex;
   justify-content: flex-start;
   width: 430px;
@@ -61,8 +97,18 @@ const StyledUser = styled.div`
   padding: 6px 10px;
 
   svg {
-    font-size: 30px;
+    font-size: 50px;
     color: #585858;
     margin-right: 6px;
   }
 `;
+
+const StyledUserName = styled.p`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+`;
+
+const StyledEmail = styled.span``;
+
+const StyledDisplayName = styled.b``;

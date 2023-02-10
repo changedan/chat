@@ -13,45 +13,34 @@ import { authState, directState, roomState } from "./recoil/atoms";
 
 interface IChat {
   createdAt: string;
-  displayName: string;
+  fromId: string;
+  fromName: string;
   message: string;
-  uid: string;
-  roomId?: string;
 }
 
-const Message = () => {
+const GroupMessage = () => {
   const [messages, setMessages] = useState<Array<IChat>>([]);
   const { uid } = useRecoilValue(authState);
-  const { toId } = useRecoilValue(directState);
-  const setDirectState = useSetRecoilState(directState);
 
-  const getDirectMessage = () => {
-    const MessageRef = collection(db, "direct");
-    const queryDirectMsg = query(
-      MessageRef,
-      where("roomUid", "in", [uid + toId, toId + uid]),
-      orderBy("createdAt")
-    );
+  const getGroupMessage = () => {
+    const MessageRef = collection(db, "group");
+    const queryGroupMsg = query(MessageRef, orderBy("createdAt"));
 
-    const message = onSnapshot(queryDirectMsg, (snapshot) => {
+    const message = onSnapshot(queryGroupMsg, (snapshot) => {
       const msg = snapshot?.docs.map((data) => ({
         createdAt: data.data().createdAt,
-        displayName: data.data().displayName,
+        fromId: data.data().fromId,
+        fromName: data.data().fromName,
         message: data.data().message,
-        uid: data.data().uid,
-        roomId: data.data().roomId,
       }));
       if (!msg) return setMessages(null);
       setMessages(msg);
-      setDirectState((prevent) => ({
-        ...prevent,
-        roomId: msg[0]?.roomId,
-      }));
     });
     return () => message();
   };
+
   useEffect(() => {
-    getDirectMessage();
+    getGroupMessage();
   }, []);
 
   return (
@@ -59,12 +48,12 @@ const Message = () => {
       {messages &&
         messages?.map((msg) => (
           <StyledMsg key={msg.createdAt}>
-            {msg.uid === uid ? (
+            {msg.fromId === uid ? (
               <StyledUser style={{ color: "#45A9F9" }}>
-                {msg.displayName}
+                {msg.fromName}
               </StyledUser>
             ) : (
-              <StyledUser>{msg.displayName}</StyledUser>
+              <StyledUser>{msg.fromName}</StyledUser>
             )}
             {msg.message}
           </StyledMsg>
@@ -73,7 +62,7 @@ const Message = () => {
   );
 };
 
-export default Message;
+export default GroupMessage;
 
 const StyledMsg = styled.li`
   list-style: none;

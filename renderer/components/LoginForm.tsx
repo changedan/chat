@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Button from "./common/Button";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "utils/firebase/firebase.utils";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authState } from "./recoil/atoms";
 interface ILoginForm {
   email: string;
   password: string;
@@ -16,13 +18,22 @@ const LoginForm = () => {
   });
   const { email, password } = loginField;
   const [errorMsg, setErrorMsg] = useState<string>("");
+  const setAuthState = useSetRecoilState(authState);
 
   const router = useRouter();
+
+  const updateAuthState = (email) => {
+    setAuthState({
+      isLoading: true,
+      displayName: auth.currentUser.displayName,
+      email: email,
+      uid: auth.currentUser.uid,
+    });
+  };
 
   const signIn = async (email, password) => {
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.replace("/userList");
     } catch (error) {
       if (error.code === "auth/user-not-found") {
         setErrorMsg("메일 주소를 다시 확인해주세요.");
@@ -31,6 +42,8 @@ const LoginForm = () => {
         setErrorMsg("비밀번호를 다시 확인해주세요.");
       }
     }
+    await updateAuthState(email);
+    router.push("/userList", undefined, { shallow: true });
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +93,7 @@ const StyledLoginForm = styled.form`
 
 const StyledInput = styled.input`
   width: 100%;
+  height: 100%;
   border: solid 1px #dadada;
   outline: 0;
   padding: 10px 110px 10px 14px;

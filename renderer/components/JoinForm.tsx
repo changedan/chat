@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Button from "./common/Button";
 import { useRouter } from "next/router";
 import styled from "@emotion/styled";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "utils/firebase/firebase.utils";
 import { doc, serverTimestamp, setDoc } from "firebase/firestore";
 
@@ -20,7 +20,6 @@ const JoinForm = () => {
     password: "",
     confirmPassword: "",
   });
-
   const { email, displayName, password, confirmPassword } = joinField;
   const [errorMsg, setErrorMsg] = useState<string>("");
   const router = useRouter();
@@ -28,6 +27,8 @@ const JoinForm = () => {
   const createUser = async (email, password) => {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
+      updateProfile(auth.currentUser, { displayName: joinField.displayName });
+
       setDoc(doc(db, "user", auth.currentUser.uid), {
         createdAt: serverTimestamp(),
         displayName: joinField.displayName,
@@ -111,7 +112,6 @@ export default JoinForm;
 const StyledJoinForm = styled.form`
   display: flex;
   flex-flow: column;
-  width: 430px;
 `;
 
 const StyledLabel = styled.label`
@@ -120,7 +120,6 @@ const StyledLabel = styled.label`
 `;
 
 const StyledInput = styled.input`
-  width: 100%;
   border: solid 1px #dadada;
   outline: 0;
   padding: 10px 110px 10px 14px;

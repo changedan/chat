@@ -31,10 +31,9 @@ const StyledHome = styled.main`
   flex-flow: column nowrap;
   align-items: center;
   justify-content: center;
-  width: 100vw;
-  height: 100vh;
   margin: 0 auto;
   padding: 0 2rem;
+  height: 90vh;
 `;
 
 const StyledHeader = styled.header`

@@ -1,35 +1,23 @@
 import styled from "@emotion/styled";
-import { signOut } from "firebase/auth";
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import React from "react";
 import { HiUser, HiChatAlt, HiChatAlt2 } from "react-icons/hi";
 import { IoLogOut } from "react-icons/io5";
-import { useSetRecoilState } from "recoil";
-import { auth } from "utils/firebase/firebase.utils";
-// import { auth } from "utils/firebase/firebase.utils";
-import { authState } from "../recoil/atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { authState, roomState } from "../recoil/atoms";
 
 const Navbar = () => {
   const setAuthSate = useSetRecoilState(authState);
-  const user = auth.currentUser;
+  const setRoomSate = useSetRecoilState(roomState);
   const router = useRouter();
 
-  // const updateAuthState = () => {
-  //   setAuthSate({
-  //     isLoading: true,
-  //     displayName: user.displayName,
-  //     email: user.email,
-  //     uid: user.uid,
-  //   });
-  // };
-
   const handleLogOut = () => {
-    signOut(auth);
-    setAuthSate((prevState) => ({
-      ...prevState,
+    setAuthSate({
+      displayName: null,
+      email: null,
       isLoading: false,
-    }));
-    console.log("로그아웃 성공");
+      uid: null,
+    });
     router.replace("/");
   };
 
@@ -37,14 +25,15 @@ const Navbar = () => {
     router.push("/userList");
   };
 
-  const handleChat = () => {
-    router.push("/chat");
+  const handleChatroom = () => {
+    setRoomSate({ roomType: "group" });
+    router.push("/chatroom");
   };
 
   return (
     <StyledNavbar>
       <HiUser onClick={handleUserList} />
-      <HiChatAlt2 />
+      <HiChatAlt2 onClick={handleChatroom} />
       <IoLogOut onClick={handleLogOut} />
     </StyledNavbar>
   );
@@ -58,7 +47,6 @@ const StyledNavbar = styled.nav`
   align-items: center;
   width: 430px;
   height: 50px;
-  margin: 10px;
   border-top: 1px solid #dadada;
   background-color: #dadada;
 

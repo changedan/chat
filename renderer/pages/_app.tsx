@@ -5,14 +5,9 @@ import { RecoilRoot } from "recoil";
 
 const MyApp = function ({ Component, pageProps }: AppProps) {
   return (
-    <>
-      <Head>
-        <title>CHAT</title>
-      </Head>
-      <RecoilRoot>
-        <Component {...pageProps} />
-      </RecoilRoot>
-    </>
+    <RecoilRoot>
+      <Component {...pageProps} />
+    </RecoilRoot>
   );
 };
 
