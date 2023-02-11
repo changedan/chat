@@ -3,9 +3,8 @@ import { collection, addDoc } from "firebase/firestore";
 import React, { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { db } from "utils/firebase/firebase.utils";
-import Button from "./common/Button";
 import { authState, directState, roomState } from "./recoil/atoms";
-import { RiSendPlane2Fill } from "react-icons/ri";
+import { HiArrowUp } from "react-icons/hi";
 interface IMessageForm {
   text: string;
 }
@@ -58,9 +57,9 @@ const MessageForm = () => {
         name="text"
         value={message.text}
         onChange={handleChange}
-      />
+      ></StyledInput>
       <StyledBtn type="submit" title="보내기">
-        <RiSendPlane2Fill />
+        <HiArrowUp />
       </StyledBtn>
     </StyledMsgForm>
   );
