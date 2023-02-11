@@ -37,18 +37,19 @@ const JoinForm = () => {
       });
       router.push("/");
     } catch (error) {
+      if (error) {
+        return setErrorMsg("회원가입에 실패했습니다.");
+      }
       if (error.code === "auth/weak-password") {
-        setErrorMsg("비밀번호 6자리 이상 입력해주세요.");
+        return setErrorMsg("비밀번호 6자리 이상 입력해주세요.");
       }
       if (error.code === "auth/invalid-email") {
-        setErrorMsg("잘못된 이메일 주소입니다.");
+        return setErrorMsg("잘못된 이메일 주소입니다.");
       }
       if (error.code === "auth/email-already-in-use") {
-        setErrorMsg("이미 가입되어 있는 계정입니다");
+        return setErrorMsg("이미 가입되어 있는 계정입니다");
       }
-      if (error) {
-        setErrorMsg("회원가입에 실패했습니다.");
-      }
+      return setErrorMsg("회원가입에 실패했습니다.");
     }
   };
 

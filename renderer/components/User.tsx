@@ -8,7 +8,6 @@ import {
   getDocs,
   orderBy,
   query,
-  serverTimestamp,
   setDoc,
   where,
 } from "firebase/firestore";
@@ -106,7 +105,6 @@ const StyledUser = styled.li`
 const StyledUserName = styled.p`
   display: flex;
   flex-direction: column;
-  align-items: center;
 `;
 
 const StyledEmail = styled.span``;

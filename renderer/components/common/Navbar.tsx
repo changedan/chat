@@ -45,12 +45,12 @@ const StyledNavbar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  width: 430px;
+  width: 100vw;
   height: 50px;
   border-top: 1px solid #dadada;
   background-color: #dadada;
 
-  padding: 10px;
+  padding: 30px;
 
   svg {
     cursor: pointer;
