@@ -22,8 +22,8 @@ const LoginForm = () => {
 
   const router = useRouter();
 
-  const updateAuthState = (email) => {
-    setAuthState({
+  const updateAuthState = async (email) => {
+    await setAuthState({
       isLoading: true,
       displayName: auth.currentUser.displayName,
       email: email,
@@ -32,17 +32,22 @@ const LoginForm = () => {
   };
 
   const signIn = async (email, password) => {
+    if (email === "" || password === "") {
+      return setErrorMsg("이메일 또는 비밀번호를 입력해주세요.");
+    }
+
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      updateAuthState(email);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
-        setErrorMsg("메일 주소를 다시 확인해주세요.");
+        return setErrorMsg("메일 주소를 다시 확인해주세요.");
       }
       if (error.code === "auth/weak-password") {
-        setErrorMsg("비밀번호를 다시 확인해주세요.");
+        return setErrorMsg("비밀번호를 다시 확인해주세요.");
       }
+      return setErrorMsg("로그인에 실패하였습니다.");
     }
-    await updateAuthState(email);
     router.push("/userList", undefined, { shallow: true });
   };
 
@@ -54,17 +59,13 @@ const LoginForm = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (email === "" || password === "") {
-      setErrorMsg("이메일 또는 비밀번호를 입력해주세요.");
-    }
-
     signIn(email, password);
   };
 
   return (
     <StyledLoginForm onSubmit={handleSubmit}>
       <StyledInput
-        type="email"
+        type="text"
         name="email"
         value={email}
         onChange={handleChange}

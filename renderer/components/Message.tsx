@@ -56,6 +56,7 @@ const Message = () => {
 
   return (
     <>
+      <StyledDirect>Direct Chat</StyledDirect>
       {messages &&
         messages?.map((msg) => (
           <StyledMsg key={msg.createdAt}>
@@ -75,8 +76,13 @@ const Message = () => {
 
 export default Message;
 
+const StyledDirect = styled.h3`
+  text-align: center;
+`;
+
 const StyledMsg = styled.li`
   list-style: none;
+  padding: 2px 20px;
 `;
 
 const StyledUser = styled.b`

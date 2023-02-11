@@ -45,9 +45,10 @@ const StyledChat = styled.section`
   flex-flow: column wrap;
   justify-content: space-between;
   height: 100%;
+  width: 100%;
 `;
 
 const StyledMessage = styled.ul`
   padding: 15px 0 15px;
-  width: 430px;
+  width: 100%;
 `;

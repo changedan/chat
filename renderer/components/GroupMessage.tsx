@@ -45,6 +45,7 @@ const GroupMessage = () => {
 
   return (
     <>
+      <StyledGroupMas>Group Chat</StyledGroupMas>
       {messages &&
         messages?.map((msg) => (
           <StyledMsg key={msg.createdAt}>
@@ -64,8 +65,13 @@ const GroupMessage = () => {
 
 export default GroupMessage;
 
+const StyledGroupMas = styled.h3`
+  text-align: center;
+`;
+
 const StyledMsg = styled.li`
   list-style: none;
+  padding: 2px 20px;
 `;
 
 const StyledUser = styled.b`

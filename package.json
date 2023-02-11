@@ -1,14 +1,13 @@
 {
   "private": true,
-  "name": "my-nextron-app",
+  "name": "chat",
   "description": "My application description",
   "version": "1.0.0",
-  "author": "Yoshihide Shiono <shiono.yoshihide@gmail.com>",
+  "author": "Gadan Park <dannsgo@gmail.com>",
   "main": "app/background.js",
   "scripts": {
     "start": "nextron",
-    "build": "nextron build",
-    "postinstall": "electron-builder install-app-deps"
+    "build": "nextron build"
   },
   "dependencies": {
     "electron-serve": "^1.1.0",
